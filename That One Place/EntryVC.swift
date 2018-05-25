@@ -106,7 +106,9 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
             
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
             vc.finder = self.finder
-            vc.totalTime = auth!.time
+            //code for restaurant requesting goes here
+            
+            //assign vc.finder to be the new finder with a restaurant attached
             self.present(vc, animated: false, completion: nil)
         }
         else

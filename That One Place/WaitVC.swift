@@ -14,7 +14,7 @@ class WaitVC: UIViewController {
     @IBOutlet weak var timerLabel: UILabel!
     
     var countdownTimer: Timer!
-    var totalTime = 28799
+    var totalTime = 14399
     
     var finder: RestaurantFinder?
     
