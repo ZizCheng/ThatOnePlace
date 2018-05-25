@@ -28,10 +28,10 @@ class Auth {
         request.httpBody = ("uuid=" + self.uuid).data(using: .utf8)
         URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else {return}
-            semaphore.wait()
+            semaphore.signal()
         }).resume()
         
-        semaphore.resume()
+        semaphore.wait()
     }
     
     func login() -> SignIn {
@@ -52,7 +52,7 @@ class Auth {
             }
         }).resume()
         semaphore.wait()
-        self.Token = info!.token
+        self.Token = "Bearer " + info!.token!
         self.time = info!.profile!.time!
         return info!
     }

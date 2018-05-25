@@ -39,6 +39,7 @@ class RestaurantFinder {
         URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else {return}
             do {
+                print(String(decoding: data, as: UTF8.self))
                 let restaurants = try JSONDecoder().decode(Businesses.self, from: data)
                 let randomnum = Int(arc4random_uniform(UInt32(restaurants.businesses.count)))
                 self.restaurant = restaurants.businesses[randomnum]
@@ -81,6 +82,7 @@ struct Restaurant: Decodable {
     let phone: String?
     let display_phone: String?
     let location: RestaurantLocation
+    let coordinates: coordinates
     
     func fetchImage(completion: @escaping ((UIImage) -> Void)) {
         let url = URL(string: self.image_url!)
@@ -121,6 +123,11 @@ struct RestaurantLocation: Decodable {
     let country: String?
     let state: String?
     let display_address: [String]?
+}
+
+struct coordinates: Decodable {
+    let latitude: Double?
+    let longitude: Double?
 }
 
 struct getOnePlace {

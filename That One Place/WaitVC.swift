@@ -22,7 +22,10 @@ class WaitVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         print("This is now waitVC")
-        print("we got the name" + (finder?.restaurant?.name)!)
+        finder?.getOne(completion: {restaraunt in
+            print("we got the name" + restaraunt.name!)
+            print(restaraunt.coordinates.latitude)
+        })
         waitButton.imageView?.contentMode = .scaleAspectFit
         totalTime = finder!.auth.time
         startTimer()

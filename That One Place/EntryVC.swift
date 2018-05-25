@@ -52,12 +52,15 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
             self.locationManager.requestWhenInUseAuthorization()
         }
         locationManager.startUpdatingLocation()
-        
-        finder = RestaurantFinder.init(Latitude: latitude, Longitude: longitude, auth: auth!)
-        
+    
+    }
+    
+    func theRest()
+    {
         if(isAppAlreadyLaunchedOnce())
         {
             let t = getTimeRemaining()
+            print(t)
             if(t > 0)
             {
                 let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
@@ -79,6 +82,7 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
             let btnImage = UIImage(named: "Discover1")
             discoverButton.setImage(btnImage , for: UIControlState.normal)
             discoverButton.imageView?.contentMode = .scaleAspectFit
+            auth?.login()
         }
     }
 
@@ -103,7 +107,6 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
     {
         if (CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse)
         {
-            auth?.login()
             
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
             vc.finder = self.finder
@@ -151,6 +154,10 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
         self.latitude = "" + "\(userLocation.coordinate.latitude)"
         self.longitude = "" + "\(userLocation.coordinate.longitude)"
         manager.stopUpdatingLocation()
+        
+        finder = RestaurantFinder.init(Latitude: self.latitude, Longitude: self.longitude, auth: self.auth!)
+        
+        theRest()
     }
     
     
