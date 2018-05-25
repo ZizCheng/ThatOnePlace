@@ -12,7 +12,7 @@ import MapKit
 
 class RestaurantVC: UIViewController
 {
-    var restaurant: Restaurant?
+    var restaurantFinder: RestaurantFinder?
     
     @IBOutlet weak var restaurantImage: UIImageView!
     @IBOutlet weak var restaurantNameLabel: UILabel!
@@ -25,17 +25,27 @@ class RestaurantVC: UIViewController
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.view.addGestureRecognizer(swipeDown)
         
-        //restaurantImage.image = restaurant.image
+        restaurantFinder?.restaurant?.fetchImage(completion: {image in
+            DispatchQueue.main.async {
+                self.restaurantImage.image = image
+            }
+        })
         
-        restaurantNameLabel.text = restaurant?.name
-        restaurantPriceLabel.text = restaurant?.price
+        restaurantNameLabel.text = restaurantFinder?.restaurant?.name
+        restaurantPriceLabel.text = restaurantFinder?.restaurant?.price
         
         setMap()
     }
     
     func setMap()
     {
+        let longDouble = (restaurantFinder?.Longtitude as! NSString).doubleValue
+        let latDouble = (restaurantFinder?.Latitude as! NSString).doubleValue
         
+        let initialLocation = CLLocation(latitude: latDouble, longitude: longDouble)
+        let regionRadius: CLLocationDistance = 1000
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(initialLocation.coordinate, regionRadius, regionRadius)
+        restaurantMapView.setRegion(coordinateRegion, animated: true)
     }
     
     @objc func respondToSwipeGesture(gesture: UIGestureRecognizer) {
