@@ -21,6 +21,8 @@ class WaitVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print("This is now waitVC")
+        print("we got the name" + (finder?.restaurant?.name)!)
         waitButton.imageView?.contentMode = .scaleAspectFit
         totalTime = finder!.auth.time
         startTimer()

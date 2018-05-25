@@ -22,7 +22,7 @@ class Auth {
     
     func register() {
         let semaphore = DispatchSemaphore(value: 0)
-        let url = URL(string: "http://10.108.2.203:4000/api/profile/register")
+        let url = URL(string: "https://thatoneplace.octohost.net/api/profile/register")
         var request = URLRequest(url: url!)
         request.httpMethod = "POST"
         request.httpBody = ("uuid=" + self.uuid).data(using: .utf8)
@@ -36,7 +36,7 @@ class Auth {
     
     func login() -> SignIn {
         let semaphore = DispatchSemaphore(value: 0)
-        let url = URL(string: "http://10.108.2.203:4000/api/profile/signin")
+        let url = URL(string: "https://thatoneplace.octohost.net/api/profile/signin")
         var request = URLRequest(url: url!)
         request.httpMethod = "POST"
         request.httpBody = ("uuid=" + self.uuid).data(using: .utf8)

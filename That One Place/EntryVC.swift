@@ -103,11 +103,15 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
     {
         if (CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse)
         {
+            auth?.login()
             
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
             vc.finder = self.finder
             //code for restaurant requesting goes here
-            
+            finder?.getOne(completion: {restaurant in
+                self.finder?.restaurant = restaurant
+                print(self.finder?.restaurant?.name)
+            })
             //assign vc.finder to be the new finder with a restaurant attached
             self.present(vc, animated: false, completion: nil)
         }

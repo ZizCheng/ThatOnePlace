@@ -31,7 +31,7 @@ class RestaurantFinder {
     
     func getOne(completion: @escaping ((Restaurant) -> Void)) {
         
-        let url = URL(string: "http://10.108.2.203:4000/api/getOnePlace")
+        let url = URL(string: "https://thatoneplace.octohost.net/api/getOnePlace")
         var request = URLRequest(url: url!)
         request.httpMethod = "POST"
         request.httpBody = ("latitude=" + self.Latitude + "&longitude=" + self.Longtitude + "&uuid=" + self.auth.uuid).data(using: .utf8)
