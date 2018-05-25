@@ -16,15 +16,14 @@ class WaitVC: UIViewController {
     var countdownTimer: Timer!
     var totalTime = 28799
     
-    var longitude = "0.0"
-    var latitude = "0.0"
-    var uuid = "12345"
+    var finder: RestaurantFinder?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         waitButton.imageView?.contentMode = .scaleAspectFit
+        totalTime = finder!.auth.time
         startTimer()
-        let finder = RestaurantFinder(Latitude: latitude, Longitude: longitude, uuid: uuid)
     }
     
     override func didReceiveMemoryWarning() {

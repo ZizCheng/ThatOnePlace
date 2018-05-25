@@ -13,6 +13,7 @@
 		840DBA4020A6A3FF000A107A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 840DBA3F20A6A3FF000A107A /* Assets.xcassets */; };
 		840DBA4320A6A3FF000A107A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 840DBA4120A6A3FF000A107A /* LaunchScreen.storyboard */; };
 		840DBA4B20A6B262000A107A /* WaitVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840DBA4A20A6B262000A107A /* WaitVC.swift */; };
+		842D1A2820B6207F00C4864B /* Auth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 842D1A2720B6207F00C4864B /* Auth.swift */; };
 		84CB039C20AD4BEE00D9A448 /* RestaurantFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CB039B20AD4BEE00D9A448 /* RestaurantFinder.swift */; };
 		84E4A24D20B21B9F00F9DAF8 /* RestaurantVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E4A24C20B21B9F00F9DAF8 /* RestaurantVC.swift */; };
 /* End PBXBuildFile section */
@@ -26,6 +27,7 @@
 		840DBA4220A6A3FF000A107A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		840DBA4420A6A3FF000A107A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		840DBA4A20A6B262000A107A /* WaitVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaitVC.swift; sourceTree = "<group>"; };
+		842D1A2720B6207F00C4864B /* Auth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Auth.swift; sourceTree = "<group>"; };
 		84CB039B20AD4BEE00D9A448 /* RestaurantFinder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RestaurantFinder.swift; sourceTree = "<group>"; };
 		84E4A24C20B21B9F00F9DAF8 /* RestaurantVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantVC.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -69,6 +71,7 @@
 				840DBA4420A6A3FF000A107A /* Info.plist */,
 				840DBA4A20A6B262000A107A /* WaitVC.swift */,
 				84E4A24C20B21B9F00F9DAF8 /* RestaurantVC.swift */,
+				842D1A2720B6207F00C4864B /* Auth.swift */,
 			);
 			path = "That One Place";
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 				84E4A24D20B21B9F00F9DAF8 /* RestaurantVC.swift in Sources */,
 				84CB039C20AD4BEE00D9A448 /* RestaurantFinder.swift in Sources */,
 				840DBA4B20A6B262000A107A /* WaitVC.swift in Sources */,
+				842D1A2820B6207F00C4864B /* Auth.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

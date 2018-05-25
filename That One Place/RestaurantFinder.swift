@@ -12,13 +12,13 @@ import Foundation
 class RestaurantFinder {
     let Latitude: String
     let Longtitude: String
-    let uuid: String
+    let auth: Auth
     var restaurant: Restaurant?
     
-    init(Latitude: String, Longitude: String, uuid: String){
+    init(Latitude: String, Longitude: String, auth: Auth){
         self.Latitude = Latitude
         self.Longtitude = Longitude
-        self.uuid = uuid
+        self.auth = auth
     }
     
     func getLatitude() -> String {
@@ -31,11 +31,11 @@ class RestaurantFinder {
     
     func getOne(completion: @escaping ((Restaurant) -> Void)) {
         
-        let url = URL(string: "http://73.140.236.41:4000/api/getOnePlace")
+        let url = URL(string: "http://10.108.2.203:4000/api/getOnePlace")
         var request = URLRequest(url: url!)
         request.httpMethod = "POST"
-        request.httpBody = ("latitude=" + self.Latitude + "&longitude=" + self.Longtitude + "&uuid=" + self.uuid).data(using: .utf8)
-        request.addValue("Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJUaGF0T25lUGxhY2UiLCJleHAiOjE1Mjg5ODE4NzIsImlhdCI6MTUyNjU2MjY3MiwiaXNzIjoiVGhhdE9uZVBsYWNlIiwianRpIjoiYzRiMGU2Y2UtZGEwMi00NTEyLWFiM2ItYzgyM2RlMDAwZDcyIiwibmJmIjoxNTI2NTYyNjcxLCJzdWIiOiIxMjMiLCJ0eXAiOiJhY2Nlc3MifQ.n1VEkxLaWiZRKSfiYc3v42vR3Ptnfj0hzCJmudrndbQhfc8fGvBWGtIeVMObsPgwtnIEILn0XRVxVLmnj5uvfw", forHTTPHeaderField: "Authorization")
+        request.httpBody = ("latitude=" + self.Latitude + "&longitude=" + self.Longtitude + "&uuid=" + self.auth.uuid).data(using: .utf8)
+        request.addValue(auth.Token!, forHTTPHeaderField: "Authorization")
         URLSession.shared.dataTask(with: request, completionHandler: {(data, response, error) in
             guard let data = data, error == nil else {return}
             do {

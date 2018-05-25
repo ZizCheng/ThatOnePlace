@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import DeviceCheck
 
 class EntryVC: UIViewController, CLLocationManagerDelegate {
 
@@ -16,13 +17,31 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
     var locationManager = CLLocationManager()
     var latitude = "32.1"
     var longitude = "-122.58"
-    var id = "4096"
+    
+    var auth: Auth?
+    var finder: RestaurantFinder?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        /*var token: String?
+        let curDevice = DCDevice.current
+        if curDevice.isSupported
+        {
+            curDevice.generateToken(completionHandler: { (data, error) in
+                if let tokenData = data
+                {
+                    print("Received token \(tokenData)")
+                    token = String(decoding: data!, as: UTF8.self)
+                }
+                else
+                {
+                    print("Hit error: \(error!.localizedDescription)")
+                }
+            })
+        }*/
         
-        id = UIDevice.current.identifierForVendor!.uuidString
+        auth = Auth.init(u: UIDevice.current.identifierForVendor!.uuidString)
         
         locationManager.delegate = self
         locationManager.distanceFilter = kCLDistanceFilterNone
@@ -34,24 +53,50 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
         }
         locationManager.startUpdatingLocation()
         
-        if(getTimeRemaining() > 0)
-        {
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
-            vc.longitude = self.longitude
-            vc.latitude = self.latitude
-            vc.uuid = self.id
-            vc.totalTime = getTimeRemaining()
-            self.present(vc, animated: false, completion: nil)
-        }
+        finder = RestaurantFinder.init(Latitude: latitude, Longitude: longitude, auth: auth!)
         
-        let btnImage = UIImage(named: "Discover1")
-        discoverButton.setImage(btnImage , for: UIControlState.normal)
-        discoverButton.imageView?.contentMode = .scaleAspectFit
+        if(isAppAlreadyLaunchedOnce())
+        {
+            let t = getTimeRemaining()
+            if(t > 0)
+            {
+                let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
+                vc.finder = self.finder
+                vc.totalTime = t
+                self.present(vc, animated: false, completion: nil)
+            }
+            else
+            {
+                let btnImage = UIImage(named: "Discover1")
+                discoverButton.setImage(btnImage , for: UIControlState.normal)
+                discoverButton.imageView?.contentMode = .scaleAspectFit
+            }
+        }
+        else
+        {
+            register()
+            
+            let btnImage = UIImage(named: "Discover1")
+            discoverButton.setImage(btnImage , for: UIControlState.normal)
+            discoverButton.imageView?.contentMode = .scaleAspectFit
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func isAppAlreadyLaunchedOnce()->Bool{
+        let defaults = UserDefaults.standard
+        if let _ = defaults.string(forKey: "isAppAlreadyLaunchedOnce"){
+            print("App already launched")
+            return true
+        }else{
+            defaults.set(true, forKey: "isAppAlreadyLaunchedOnce")
+            print("App launched first time")
+            return false
+        }
     }
 
     @IBAction func DiscoverClicked(_ sender: UIButton)
@@ -60,9 +105,8 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
         {
             
             let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
-            vc.longitude = self.longitude
-            vc.latitude = self.latitude
-            vc.uuid = self.id
+            vc.finder = self.finder
+            vc.totalTime = auth!.time
             self.present(vc, animated: false, completion: nil)
         }
         else
@@ -103,9 +147,17 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
         manager.stopUpdatingLocation()
     }
     
+    
+    
+    
     func getTimeRemaining() -> Int
     {
-        return 0
+        return (auth?.login().profile?.time!)!
+    }
+    
+    func register()
+    {
+        auth?.register()
     }
     
 }
