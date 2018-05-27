@@ -14,21 +14,25 @@ class WaitVC: UIViewController {
     @IBOutlet weak var timerLabel: UILabel!
     
     var countdownTimer: Timer!
-    var totalTime = 14399
+    var totalTime: Int?
+    @IBOutlet weak var arrow: UIButton!
     
     var finder: RestaurantFinder?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        timerLabel.text = "\(timeFormatted(totalTime!))"
+        arrow.isHidden = true
         print("This is now waitVC")
-        finder?.getOne(completion: {restaraunt in
-            print("we got the name" + restaraunt.name!)
-            print(restaraunt.coordinates.latitude)
-        })
         waitButton.imageView?.contentMode = .scaleAspectFit
         totalTime = finder!.auth.time
         startTimer()
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let restaurantDisplay = segue.destination as! RestaurantVC
+        restaurantDisplay.restaurantFinder = self.finder
     }
     
     override func didReceiveMemoryWarning() {
@@ -41,11 +45,12 @@ class WaitVC: UIViewController {
     }
     
     @objc func updateTime() {
-        timerLabel.text = "\(timeFormatted(totalTime))"
+        timerLabel.text = "\(timeFormatted(totalTime!))"
         
-        if totalTime != 0 {
-            totalTime -= 1
+        if totalTime! != 0 {
+            totalTime! -= 1
         } else {
+            arrow.isHidden = false
             endTimer()
         }
     }

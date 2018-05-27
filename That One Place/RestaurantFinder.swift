@@ -10,8 +10,8 @@ import UIKit
 import Foundation
 
 class RestaurantFinder {
-    let Latitude: String
-    let Longtitude: String
+    var Latitude: String
+    var Longtitude: String
     let auth: Auth
     var restaurant: Restaurant?
     

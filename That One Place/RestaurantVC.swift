@@ -21,11 +21,11 @@ class RestaurantVC: UIViewController
     @objc override func viewDidLoad()
     {
         super.viewDidLoad()
-        var swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(respondToSwipeGesture))
         swipeDown.direction = UISwipeGestureRecognizerDirection.down
         self.view.addGestureRecognizer(swipeDown)
         
-        restaurantFinder?.restaurant?.fetchImage(completion: {image in
+        self.restaurantFinder!.restaurant!.fetchImage(completion: {image in
             DispatchQueue.main.async {
                 self.restaurantImage.image = image
             }
@@ -39,8 +39,8 @@ class RestaurantVC: UIViewController
     
     func setMap()
     {
-        let longDouble = (restaurantFinder?.Longtitude as! NSString).doubleValue
-        let latDouble = (restaurantFinder?.Latitude as! NSString).doubleValue
+        let longDouble = Double(self.restaurantFinder!.restaurant!.coordinates.longitude!)
+        let latDouble = Double(self.restaurantFinder!.restaurant!.coordinates.latitude!)
         
         let initialLocation = CLLocation(latitude: latDouble, longitude: longDouble)
         let regionRadius: CLLocationDistance = 1000

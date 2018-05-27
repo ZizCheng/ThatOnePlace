@@ -11,6 +11,7 @@ import Foundation
 class Auth {
     
     var Token: String?
+    var Profile: Profile?
     let uuid: String
     
     var time = 0
@@ -54,6 +55,7 @@ class Auth {
         semaphore.wait()
         self.Token = "Bearer " + info!.token!
         self.time = info!.profile!.time!
+        self.Profile = info!.profile!
         return info!
     }
 }

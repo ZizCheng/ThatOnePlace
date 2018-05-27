@@ -23,67 +23,19 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        /*var token: String?
-        let curDevice = DCDevice.current
-        if curDevice.isSupported
-        {
-            curDevice.generateToken(completionHandler: { (data, error) in
-                if let tokenData = data
-                {
-                    print("Received token \(tokenData)")
-                    token = String(decoding: data!, as: UTF8.self)
-                }
-                else
-                {
-                    print("Hit error: \(error!.localizedDescription)")
-                }
-            })
-        }*/
+
         
         auth = Auth.init(u: UIDevice.current.identifierForVendor!.uuidString)
-        
-        locationManager.delegate = self
-        locationManager.distanceFilter = kCLDistanceFilterNone
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        
-        
-        if CLLocationManager.authorizationStatus() == .notDetermined {
-            self.locationManager.requestWhenInUseAuthorization()
-        }
-        locationManager.startUpdatingLocation()
-    
+        finder = RestaurantFinder.init(Latitude: self.latitude, Longitude: self.longitude, auth: self.auth!)
+        authenticate(auth!)
+        determineMyCurrentLocation()
     }
     
-    func theRest()
-    {
-        if(isAppAlreadyLaunchedOnce())
-        {
-            let t = getTimeRemaining()
-            print(t)
-            if(t > 0)
-            {
-                let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
-                vc.finder = self.finder
-                vc.totalTime = t
-                self.present(vc, animated: false, completion: nil)
-            }
-            else
-            {
-                let btnImage = UIImage(named: "Discover1")
-                discoverButton.setImage(btnImage , for: UIControlState.normal)
-                discoverButton.imageView?.contentMode = .scaleAspectFit
-            }
-        }
-        else
-        {
-            register()
-            
-            let btnImage = UIImage(named: "Discover1")
-            discoverButton.setImage(btnImage , for: UIControlState.normal)
-            discoverButton.imageView?.contentMode = .scaleAspectFit
-            auth?.login()
-        }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let waitvc = segue.destination as! WaitVC
+        waitvc.finder = self.finder!
+        waitvc.totalTime = self.auth!.Profile!.time!
     }
 
     override func didReceiveMemoryWarning() {
@@ -107,16 +59,13 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
     {
         if (CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse)
         {
-            
-            let vc = self.storyboard?.instantiateViewController(withIdentifier: "WVC") as! WaitVC
-            vc.finder = self.finder
-            //code for restaurant requesting goes here
-            finder?.getOne(completion: {restaurant in
-                self.finder?.restaurant = restaurant
-                print(self.finder?.restaurant?.name)
-            })
-            //assign vc.finder to be the new finder with a restaurant attached
-            self.present(vc, animated: false, completion: nil)
+            if(self.auth!.time <= 0){
+                
+                finder?.getOne(completion: { restaurant in
+                    
+                })
+            }
+            self.performSegue(withIdentifier: "wait", sender: self)
         }
         else
         {
@@ -130,15 +79,16 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
     }
     
     func determineMyCurrentLocation() {
-        locationManager = CLLocationManager()
         locationManager.delegate = self
+        locationManager.distanceFilter = kCLDistanceFilterNone
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
         
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.startUpdatingLocation()
-            //locationManager.startUpdatingHeading()
+        
+        if CLLocationManager.authorizationStatus() == .notDetermined {
+            self.locationManager.requestWhenInUseAuthorization()
         }
+        locationManager.startUpdatingLocation()
+        
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]){
@@ -151,26 +101,21 @@ class EntryVC: UIViewController, CLLocationManagerDelegate {
         
         print("user latitude = \(userLocation.coordinate.latitude)")
         print("user longitude = \(userLocation.coordinate.longitude)")
-        self.latitude = "" + "\(userLocation.coordinate.latitude)"
-        self.longitude = "" + "\(userLocation.coordinate.longitude)"
+        finder!.Latitude = "" + "\(userLocation.coordinate.latitude)"
+        finder!.Longtitude = "" + "\(userLocation.coordinate.longitude)"
         manager.stopUpdatingLocation()
         
-        finder = RestaurantFinder.init(Latitude: self.latitude, Longitude: self.longitude, auth: self.auth!)
-        
-        theRest()
     }
     
-    
-    
-    
-    func getTimeRemaining() -> Int
-    {
-        return (auth?.login().profile?.time!)!
+    func authenticate(_ Authentication: Auth) -> Void {
+        if(isAppAlreadyLaunchedOnce())
+        {
+            Authentication.login()
+        }
+        else
+        {
+            Authentication.register()
+            Authentication.login()
+        }
     }
-    
-    func register()
-    {
-        auth?.register()
-    }
-    
 }
